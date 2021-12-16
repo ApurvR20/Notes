@@ -1,0 +1,422 @@
+Self-Care is doing what my future self would appreciate.
+
+what is closure?
+-----------------------------------------------------------------------------------------------
+File system vs DB
+
+- filesystem : own set of data for each directory; no relation, cant exchange info
+	cons : 
+	- data redundancy
+	- difficult to access
+	- data isolation
+	- integrity problem
+	- atomicity problem
+	- concurrenct acces anomalies
+	- security problem
+	
+- DB : common pool of data, gets rid of aforementioned problem
+-----------------------------------------------------------------------------------------------
+Data view : levels of abstraction for various users/maintainers/creator of DB
+
+Physical level (HOW) : 
+- lowest
+- complex low level DSA
+- might interact with lieral memory locations
+- DB Programmer
+- eg :  compiler level
+
+Logical level (WHAT): 
+- middle
+- the actual data and their relations
+- DB admin
+- DB level
+
+View Level (TOP) : 
+- highest
+- simplification of representation, many possible persepctives (or views) for same data
+- access management
+- doodoo user
+- dashboard or end app level
+
+Instance : state and info of a DB at a certain moment, like a snapshot
+Schema : overall general design
+	Categories : Physical,logical,View (depends on level of abstraction).
+	
+	Data independance : modifying schema definition of one view without affecting the other.
+	categories : Physical, Logical
+------------------------------------------------------------------------------------------------
+Data Languages
+- all are parts of SQL
+
+#D of CRUD undecided.
+DDL (Data definition) :  C of CRUD, create, alter, drop, truncate
+DML (Data manipulation) : RU of CRUD, select, insert, update
+DCL (Data Control) : access control; grant, revoke
+
+Types of user
+
+- App programmers
+- sophisticated users : people who write queries in query language
+- specialised users : use DB for specific purpose eg : CAD devs, complex AV systems
+- naive users : layman interactions with end app, eg atm
+- DBA
+	roles : 
+	- schema definition : creation and defininf DB in DDL
+	- Storage structure and acces method definition
+	- Schema and physical organization modification : use DDL to generate proper internal models
+	- Authorization
+	- Specifying integrity constraints
+	- routine maintenance
+	- performance monitoring
+	- backups
+------------------------------------------------------------------------------------------------
+Data models : collection of  data semantics, relations, constraints
+
+- first step in DB design
+
+Types
+- Physical : based on table structure; shows all columns, constraints, primary & sec. keys, relations ...
+
+# UML (unifying model language) : standardized, general-purpose,graphical language for constructing and documenting schemas.
+
+- Object based Model : 
+	- based on view levels, describes data accordingly 
+	- flexible structing capabilities
+	- explicit specification of constraints.
+	
+	Types
+	
+	- ER model : 
+		- high level, simple, based on real life example of objects
+		- entity : distinguishable object
+		- relation : association bw entities
+		
+	- Object Based : 
+		- extension of ER model with encapsulation. methods, object identity
+		- has inheritance
+		- OO data model + relational data model
+		
+	- Record based : 
+		- logical and view level
+		- no representation of code.
+		- fixed format record types
+		
+		types : 
+		- Relational : rows, columns, tuples and tables(also called the relation)
+				- single parent for a record
+		- Network : links instead of relation
+				- more than one possible parent for record
+		- hierarchical : links, but trees instead of graph in network
+				- parent-child relationships
+------------------------------------------------------------------------------------------------
+When DB is BAD （♯▼皿▼）
+- simple, static storage needs
+- processing and storage restrictions
+- proprietary bullshit
+- single access
+------------------------------------------------------------------------------------------------
+Data constraints
+
+- limitations for fields, prevent user from entering invalid data
+
+Types
+
+-not null : column name datatype(cnd) NOT NULL
+-unique : cnd UNIQUE
+-primary key : one or more cols used to uniquely indentify each row in the table; unique+not null
+		cnd PRIMARY KEY
+-foreign key : used to link two tables via primary key
+		cnd REFERENCES other table 
+------------------------------------------------------------------------------------------------
+DBMS Architecture
+
+1. Two-Tier
+	- client-server; direct connection bw them
+		* client : ui,app
+		* server : query processing, transaction management
+	- pros : easy to maintain, compatible with current systems
+	- cons : poor performance under load, hence low scalability
+	- egs  : ODBC/JDBC client to talk to db
+				
+				(Image 1) (tutpoint)
+				
+2. Three-Tier
+	- client <-> app server <-> db server
+		* app server : load management, medium of exchange, check for data corruption
+		* rest are same
+	- pros : enchanced scalability, data integrity due to check, improved security due to indirect 			 access
+	- cons : increased complexity
+	- egs  : middleware for web apps
+	
+				 (Image 2)(gfg)
+				 
+3. One Tier : user mein gaand mein DB, direct access.
+------------------------------------------------------------------------------------------------
+Multimedia db
+- stores multiple kinds of data (txt, mpeg, swf etc etc)
+- media data : img, vids, audios, animation
+- media format datac : sample rate, fps, encoding scheme
+- metadata
+
+challenges : variety of formats and their conversion, large size, high processing time
+------------------------------------------------------------------------------------------------
+Relational algebra : procedural query language that takes one or two "relations" as input and produces a new one.
+
+- selection (Sigma σ) : select operation, unary
+	- horizontal partitioning
+	- output rows (tuples)
+	SQL equivalent : SELECT * FROM table_name where condition
+
+- Projection (Pi π) : select and project cols
+	- vertical partitioning
+	- only distinct values (for one col) or distinct combos(for multiple cols) is projected.
+	- outputs cols (attributes)
+	
+# first we select the required row, and project the required field. π sub = condition(σ sub = condition (table_name)) 
+
+- Cartesian product ( X ): creates a relation between two relations R and S, allowing all possible combinations between their tuples.
+
+	#rule for cartestian prod. : at least one attribute should be common bw both relation for 		cartesian product.
+	
+	- no of attributes (cols) : m+n 
+	- no of tuples (rows) : x*y
+	- how to : 
+		- make table acc. to above dimesions
+	 	- fill it with all possible combo
+	 	eg : if rows of R are a,b,c and S are d,e,f, the result is ad,ae,af,bd,be,bf,cd,ce,cf
+	 	
+- Set difference ( - ) : remove tuples (elements) of second set from first (A ∩ ~B)
+			 - no of cols should be same
+			 - domain of each col should be same
+- Union (U) : union of two tables 
+	     - no of cols should be same
+	     - domain of each col should be same
+	     - tuples are written only once
+	     - attribute/col no of result is taken from first
+	    
+- Joins : used when the solution has portions in more than one table
+	- MUST have atleast one common attribute (exactly same common name) in all tables as CK in either table
+	- cross product + select statement (also called conditional statement)
+	
+	Types : 
+	
+	- Natural join :  cross product + condition
+		- MUST have common and equal attribute
+		 Eg:  	Two tables : employee and dept, key : emp no.
+			For names of all employees allocated a dept,
+			result = select ename from emp natural join dept 
+			(select emp_name from from emp,dept where emp.empno = dept.empno)
+	# comma means join (emp,dept)
+		
+	- Self join : only one table is given, which is a combo of two other tables. thus cp + cond is done on itself. Two aliases (temp copies T1 and T2) are taken, which ar self-joined to each other
+	
+	For eg, selecting students with more than one course,
+	select T1.sid from study as T1, study as T2 where T1.sid = T2.sid and T1.cid (courseid) <> (not equal !=) T2.cid (the select is doing a projection as well)
+ 	
+ 	-Equi join : fields of two different attributes are compared for results.
+ 	
+	 	Equi join = natural join (common and equal attribute (primary and foreign key)) + equal values in other attributes that we're looking at. 	
+	 	Eg : Two tables : employee and dept., key : emp no.
+	 	Query : address of empl == location of dept.
+	 	select e-name from emp,dept where emp e_no = dept.e_no (natural join) and emp.address = dept.location (equi join)
+	 	# we do the first so that if an enp that is not allocated an department, does not get counted in the result  
+
+	- Left outer join : left table + values with equal keys in right (cross product is there meaning all attributes are counted)
+	select emp_no, e_name, d_name, loc from left outer join or (emp.dept no = dept.dept no)
+	
+	- Right outer join : replace "left" in prev by "right"
+
+###add queries for all required.
+
+TRC read from ppt. each portion is generally taken from a different table
+DRC
+-------------------------------------------------------------------------------------------------
+Trigger : https://www.javatpoint.com/pl-sql-trigger
+
+-------------------------------------------------------------------------------------------------
+Normalization
+
+
+- rules : reflexive, https://www.javatpoint.com/dbms-inference-rule
+#calculate closure : find a super key, then replace one of its components that can be derieved by something else to find another super key. the set is ck.
+
+- systematic approach of decomposing tables
+- pros: - eliminate data redundancy
+        - removes anomalies
+        	- insertion : data for a field can't be inserted unless previous one is present;
+        		      repetition of similar for various entries
+        	- updation : updating any field incorrectly can cause loss of connected data
+        	- deletion : since data of different fields in interconnected, deleting one would 				     kill others as well
+        - ensuring data dependencies are logically stored
+        
+        
+- Codd rules : ###############################################
+
+- Forms of Normalization : 
+
+- How does normalization works : break down the table into separate tables, where redundant information is linked to the original part, leaving fewer entries in the database. 
+	
+	- 1st NF : 
+		Rules : - atomic valued attributes, no mutlivalued
+			- same type of attributes in a column
+			- unique column names
+			- distinct rows
+			
+		pro : generally reduces redundancy,  prepares table for higher form.
+		con : if a row has repeating information in a cell, separate entries are made to make the rows unique.
+	- 2nd NF : 
+		Rules : - should be in 1st NF
+			- no partial dependency, that is, no non-prime attribute (NPA) should be 				functionally dependant (deducible) from a portion of the candidate key. 
+			- partial dep : LHS is proper subset (less than whole) of PA, RHS is NPA
+			####################################### ADD example here.
+		pro/con : ###################################### add them here.
+	
+	- 3rd NF : 
+		Rules : - should be in 2nd NF
+			- no transitive dependancy (no npa should depend on another npa)
+			- LHS should be CK OR RHS should PA (this is not the condition of transititve, but 3rd NF itself)
+			
+		- BCNF : special case of 3rd, lhs of dependency should be always be candidate key or super key
+	
+	-4th NF : 
+		Rules : - should be in bcnf
+			- no multivalue dependency. For A->B, B should be unique.
+			
+	-5th NF : 
+		Rules : - should be in 4th
+			- cant be further losslessly decomposed. 
+			
+#check for only relations that are not proven in higher levels			
+Decomposition : breaking tables for reducing redundancy. criteria for good ones : lossless, preserve dependencies.
+
+	Types : Lossless (on joining the original table is regained)
+	      - Lossy : join is done and db becomes inconsistent (either spurious tuples (false) or lost data). To avoid that, the commmon attribute while joining is always candidate key or super key (all unique elements, no case of duplication, identifies all other attributes)
+--------------------------------------------------------------------------------------------------
+Transaction processing
+
+- Transaction : unit of program that accesses and/or updates various data items; database must be consistent in the process.
+Issues : hardware failures and system crashes, concourrent execution of multiple transactions.
+
+	ACID : To preserve integrity of data
+	- Atomicity : either all operations reflect properly or none do in DB
+	- consistency : execution of trans. in isolation
+	- isolation : different trans. unaware of each other.
+	- durability : persistence of changes after transactions.
+	
+	States
+	- Active : during execution
+	- Partially committed : after final statement execution
+	- failed : discovery that no longer execution can proceed
+	- aborted : rollback to prev state -> restart
+					    -> kill
+	- committed : successful completion
+	
+	Concurrent exec. : 
+	pros : better resource utiliztion, reduced response time
+	- feels like single but multiple happen
+	- schemes : mechanism to achieve isolation
+	
+	Schedules : indicate chronological order of transactions
+	- must contain all
+	- must preserve all
+	
+		Types : 
+			- Serial : all op of T1 -> then T2
+			- non serial : intermixing
+			
+			
+		Serializibility : To check correctness of non serial; is serializable if equivalent to serial of same n transaction.
+			
+			Types : 
+			- Conflict : If conflicts in serial and non-serial are in same order
+				Conflict papers : if two transactions are working on the same data object, and operation for atleast one of them is write
+
+				Methods : 
+				- By finding conflicts : 
+					- determine conflict piars. their position remains locked
+					- swap non conflict pairs in the table (dont swap bw transactions, but their height, ie upper and lower, not right and left).
+					- swap until result obtained.
+				- precedence graph
+					- write transactions in order
+					- check conflicts till bottom. if they arise, directed edge to earlier to later. If multiple conflicts arise for one source, multiple arrows.
+					- check graph in end, if no loops, conflict serializable -> 					  consistent. if loops -> go to view.
+					- order of transactions : lowest indegree (lowest no of 						  incoming arrows, or mst using direction)
+			- View : used when conflict gives a loop.
+				Conditions :
+				- first read should be same for each schedule
+				- last write should be same for each schedule
+				- producer consumer sequence should be maintaned : #ask someone
+
+- Concurrency protocol : management for concurrent execution of transactions on DB
+
+	Types :
+	- Lock based :  data item is locked in a certain way.
+		- Lock types : exclusive (X, for read and write, one transaction at a time),
+			     shared (S, foreonly, can be requested by multiple)
+			Cons:- Not enough to gain serializibility
+			     - restrict set of possible schedules
+			     - cause deadlock
+			     - Starvation or Livelock is the situation when a transaction has to wait for a indefinite period of time to acquire a lock. (repeated rollbacks and deadlocks)	
+			
+			Types : 
+			- basic 2-phase : locks obtained during growing, released 						   during shrinking, assures serializability
+				- can cause cascading rollback (one failure leads to several abort 					  or rollback)
+			- conservative : locks pre-acquired, no growing phase, no deadlock, 					practical implementation is difficult, can have cascading
+			- strict : most popular, guarantees strict schedule
+				- exclusive locks are not released until commit or abort.
+			- rigourous : no locks released until commit or abort, no shrinking phase.
+			
+	-Timestamp based: assigns a unique value to each request, generally a timestamp
+		- no deadlock, order the transactions on basis of arrival
+		
+	
+	
+	Deadlock : 
+	conditions : 
+	- mutual exclusion : each resource assigned to 1 process or available
+	- hold and wait
+	- no preemption : granted resources can't be forcibly taken away
+	- circular wait
+	
+	Deadlock handling : 
+			
+		- deadlock prevention : prevents deadlocks by restraining requests, making sure at least one deadlock condition is avoided.
+		- deadlock avoidance : dyamically granrs a resource to a process if the resulting state is safe.
+		- deadlock detection and recovery : that allows deadlock to from and then breaks them
+		
+		Types : 
+		Read timestamp : latest Ts of the data item which has been read, == Ts of the transaction
+		Write timestamp : latest Ts of the data item which has been written, == Ts of the transaction
+		- we allow older transactions to act first. If a older transaction wants to act on the data item, but a younger transaction has acted first on the data item, we roll back the younger one.
+		
+		- if only read is done, we check if younger hasn't written earlier.
+		- if write is done, we check if younger has neither read nor written the data item.
+		
+		1. Check the following condition whenever a transaction Ti issues a Read (X) operation:
+
+If W_TS(X) >TS(Ti) then the operation is rejected.
+If W_TS(X) <= TS(Ti) then the operation is executed.
+Timestamps of all the data items are updated.
+2. Check the following condition whenever a transaction Ti issues a Write(X) operation:
+
+If TS(Ti) < R_TS(X) then the operation is rejected.
+If TS(Ti) < W_TS(X) then the operation is rejected and Ti is rolled back otherwise the operation is executed.
+
+
+	Pros : no deadlock
+	cons : starvation is possible.
+-------------------------------------------------------------------------------------------------
+ER diag
+
+Key - underlined
+mutlivalue - concentric ellipse
+derived - dotted line
+
+--------------------------------------------------------------------------------------------------
+Query optimisation
+
+query in high-level lang -> scanning, parsing -> immediate form of query -> execution plan -> query code generator -> code to execute the query -> runtime database -> result
+
+- reasonable efficient strategy
+- time consuming
+- more like planning of execution strategy
