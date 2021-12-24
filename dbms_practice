@@ -1,0 +1,57 @@
+create table exam_schedule(
+name varchar(15) NOT NULL,
+date_of_exam DATE PRIMARY KEY,
+maximum_marks number(3) NOT NULL)
+
+insert into exam_schedule(name, date_of_exam, maximum_marks)
+values ('ada','30-NOV-2021',60)
+
+insert into exam_schedule(name, date_of_exam, maximum_marks)
+values ('networks','02-DEC-2021',60)
+
+insert into exam_schedule(name, date_of_exam, maximum_marks)
+values ('FBL','08-DEC-2021',60)
+
+select * from exam_schedule where name='FBL'
+
+select * from exam_schedule order by name
+
+update exam_schedule set name='german' where name='FBL' 
+
+alter table exam_schedule add Attendance number(3)
+
+desc exam_schedule ##To see schema
+
+alter table exam_schedule MODIFY attendance varchar(1)
+
+alter table exam_schedule rename to schedule
+
+delete from schedule where name='german'
+
+alter table schedule rename column date_of_exam to doe
+
+update schedule set attendance='Y' where name='ada'
+update schedule set attendance='N' where name='networks'
+
+select avg(maximum_marks)"Average" from schedule
+select sum(maximum_marks)"Sum" from schedule
+select max(maximum_marks)"Maximum" from schedule
+select min(maximum_marks)"Minimum" from schedule
+select count(name)"no. of exams" from schedule
+select count(*)"no. of exams" from schedule where maximum_marks >60
+select power(maximum_marks,2) from schedule
+
+select name,doe from schedule where maximum_marks>59 AND NOT attendance='Y'
+####do drop in end
+
+Dual : It's a sort of dummy table with a single record used for selecting when you're not actually interested in the data, but instead want the results of some system function in a select statement: e.g. select sysdate from dual;
+
+
+
+create table time_slots(
+date_of_exam DATE,
+start_time TIME,
+FOREIGN KEY (exam schedule) REFERENCES exam schedule)
+
+create view view_loda as select name from schedule
+select * from view_loda
